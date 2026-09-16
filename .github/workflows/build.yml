@@ -4,22 +4,11 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Auto Find Folder & Build Vite
+      - name: Create Direct Launcher
         run: |
-          $folder = Get-ChildItem -Directory | Select-Object -First 1 -ExpandProperty Name
-          cd "$folder"
-          npm install
-          npm run build
-          cd ..
           mkdir win-app
-          xcopy /E /I "$folder\dist\*" win-app\
-          echo '@echo off' > win-app\Launch_Portal.bat
-          echo 'start msedge --app="%~dp0index.html"' >> win-app\Launch_Portal.bat
+          echo @echo off > win-app\Launch_Portal.bat
+          echo start msedge --app="https://netlify.app" >> win-app\Launch_Portal.bat
       - name: Upload Windows Setup
         uses: actions/upload-artifact@v4
         with:
