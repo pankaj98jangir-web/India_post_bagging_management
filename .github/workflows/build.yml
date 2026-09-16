@@ -1,0 +1,26 @@
+name: Build Windows App
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build App
+        run: |
+          cd "india-post--bagging-operations-portal"
+          npm install
+          npm run build
+      - name: Package Windows App
+        run: |
+          cd "india-post--bagging-operations-portal"
+          npx nativefier --name "India Post Bagging Portal" --platform windows dist/index.html dist-win/
+      - name: Upload Windows Setup
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-EXE-App
+          path: india-post--bagging-operations-portal/dist-win/
+          
