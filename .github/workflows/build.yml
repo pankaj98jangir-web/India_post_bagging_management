@@ -9,18 +9,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Auto Find Folder & Package
+      - name: Auto Find Folder & Build Vite
         run: |
           $folder = Get-ChildItem -Directory | Select-Object -First 1 -ExpandProperty Name
           cd "$folder"
           npm install
           npm run build
-          npm install -g @neutralinojs/neu
-          npx nativefier --name "India_Post_Bagging" --platform windows "dist/index.html" dist-win
+          cd ..
+          mkdir win-app
+          xcopy /E /I "$folder\dist\*" win-app\
+          echo '@echo off' > win-app\Launch_Portal.bat
+          echo 'start msedge --app="%~dp0index.html"' >> win-app\Launch_Portal.bat
       - name: Upload Windows Setup
         uses: actions/upload-artifact@v4
         with:
           name: Windows-EXE-App
-          path: |
-            **/dist-win/*/
-            
+          path: win-app/
+          
