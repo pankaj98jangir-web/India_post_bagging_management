@@ -9,17 +9,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Auto Find Folder & Build
+      - name: Auto Find Folder & Package
         run: |
           $folder = Get-ChildItem -Directory | Select-Object -First 1 -ExpandProperty Name
-          echo "Found folder: $folder"
           cd "$folder"
           npm install
           npm run build
-          npx nativefier --name "India Post Bagging Portal" --platform windows "dist/index.html" dist-win/
+          npm install -g @neutralinojs/neu
+          npx nativefier --name "India_Post_Bagging" --platform windows "dist/index.html" dist-win
       - name: Upload Windows Setup
         uses: actions/upload-artifact@v4
         with:
           name: Windows-EXE-App
-          path: "**/dist-win/"
-          
+          path: |
+            **/dist-win/*/
+            
